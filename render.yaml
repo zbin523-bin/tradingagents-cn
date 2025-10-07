@@ -18,6 +18,44 @@ services:
       - key: PYTHONUNBUFFERED
         value: 1
 
+      # AI Model API Keys
+      - key: DASHSCOPE_API_KEY
+        value: sk-e0100915b5394da0aa8e852bf09d9db8
+      - key: DEEPSEEK_API_KEY
+        value: sk-43e5588b2aa547c9b977b374b45ddd37
+      - key: DEEPSEEK_BASE_URL
+        value: https://api.deepseek.com
+      - key: DEEPSEEK_ENABLED
+        value: true
+      - key: SILICONFLOW_API_KEY
+        value: sk-goeenxldkpvuywhlgkwdqpzwzgodenvmpxprwluvgolrbzul
+
+      # Financial Data API Keys
+      - key: FINNHUB_API_KEY
+        value: d372ms9r01qtvbtjrefgd372ms9r01qtvbtjreg0
+      - key: TAVILY_API_KEY
+        value: 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
+      - key: ALPHAVANTAGE_API_KEY
+        value: 5DGMRPMMEUBMX7PU
+      - key: POLYGON_API_KEY
+        value: hb0TuTgFLB603Xtyg_ephpjMpVc8W18L
+
+      # Configuration
+      - key: DEFAULT_CHINA_DATA_SOURCE
+        value: akshare
+      - key: TRADINGAGENTS_LOG_LEVEL
+        value: INFO
+      - key: MEMORY_ENABLED
+        value: true
+      - key: MONGODB_ENABLED
+        value: false
+      - key: REDIS_ENABLED
+        value: false
+      - key: ENABLE_COST_TRACKING
+        value: true
+      - key: USE_MONGODB_STORAGE
+        value: false
+
     # Build and runtime settings
     buildFilter:
       paths:
