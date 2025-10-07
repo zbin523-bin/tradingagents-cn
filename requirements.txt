@@ -1,0 +1,42 @@
+# TradingAgents-CN Render部署最小依赖包
+# 只包含启动Web应用所需的核心依赖
+
+streamlit>=1.28.0
+pandas>=2.3.0
+plotly>=5.0.0
+requests>=2.32.4
+python-dotenv>=1.0.0
+typing-extensions>=4.14.0
+pytz>=2025.2
+tqdm>=4.67.1
+psutil>=6.1.0
+
+# AI和LLM支持
+openai>=1.0.0,<2.0.0
+langchain-openai>=0.1.0
+langchain-experimental>=0.3.4
+langchain-anthropic>=0.3.15
+langchain-google-genai>=2.1.5
+google-genai>=0.1.0
+google-generativeai>=0.8.0
+dashscope>=1.20.0
+
+# 数据处理
+yfinance>=0.2.63
+akshare>=1.16.98
+finnhub-python>=2.4.23
+eodhd>=1.0.32
+stockstats>=0.6.5
+
+# 数据库和缓存
+pymongo>=4.0.0
+redis>=6.2.0
+
+# 文档处理
+markdown>=3.4.0
+pypandoc>=1.11
+
+# 其他工具
+rich>=14.0.0
+questionary>=2.1.0
+setuptools>=80.9.0
