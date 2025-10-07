@@ -15,3 +15,7 @@ psutil>=6.1.0
 markdown>=3.4.0
 rich>=14.0.0
 setuptools>=80.9.0
+
+# 网页抓取依赖
+beautifulsoup4>=4.9.0
+lxml>=4.6.0
