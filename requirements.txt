@@ -22,3 +22,7 @@ lxml>=4.6.0
 
 # AI 模型依赖
 openai>=1.0.0,<2.0.0
+
+# 金融数据依赖
+yfinance>=0.2.63
+stockstats>=0.6.5
