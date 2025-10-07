@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: tradingagents-cn
+    env: python
+    plan: starter
+    buildCommand: "pip install -r requirements-minimal.txt"
+    startCommand: "python start_render.py"
+    healthCheckPath: "/_stcore/health"
+    autoDeploy: yes
+    autoDeployTrigger: commit
+    branch: main
+    healthCheckPath: "/_stcore/health"
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PORT
+        value: "8501"
+      - key: TAVILY_API_KEY
+        value: "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"
+      - key: DEEPSEEK_API_KEY
+        value: "sk-43e5588b2aa547c9b977b374b45ddd37"
+      - key: SILICONFLOW_API_KEY
+        value: "sk-goeenxldkpvuywhlgkwdqpzwzgodenvmpxprwluvgolrbzul"
+
+databases:
+  - name: redis
+    ipAllowList: []
+
+regions:
+  - oregon
+  - frankfurt
+  - singapore
+
+buildFilters:
+  - path: node_modules
+    type: ignored
+  - path: __pycache__
+    type: ignored
+  - path: .git
+    type: ignored
+  - path: .pytest_cache
+    type: ignored
+  - path: .mypy_cache
+    type: ignored
+  - path: .venv
+    type: ignored

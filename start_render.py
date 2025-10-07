@@ -26,16 +26,26 @@ def main():
     # 安装依赖
     print("📦 检查并安装依赖...")
     try:
-        # 检查requirements.txt是否存在
+        # 优先使用minimal requirements文件
+        minimal_requirements = project_root / "requirements-minimal.txt"
         requirements_file = project_root / "requirements.txt"
-        if requirements_file.exists():
+
+        if minimal_requirements.exists():
+            print("📦 使用minimal requirements文件...")
+            subprocess.run([
+                sys.executable, "-m", "pip", "install",
+                "--no-cache-dir", "-r", str(minimal_requirements)
+            ], check=True)
+            print("✅ 依赖安装完成")
+        elif requirements_file.exists():
+            print("📦 使用requirements.txt文件...")
             subprocess.run([
                 sys.executable, "-m", "pip", "install",
                 "--no-cache-dir", "-r", str(requirements_file)
             ], check=True)
             print("✅ 依赖安装完成")
         else:
-            print("⚠️ requirements.txt文件不存在")
+            print("⚠️ requirements文件不存在")
     except subprocess.CalledProcessError as e:
         print(f"❌ 依赖安装失败: {e}")
         sys.exit(1)
