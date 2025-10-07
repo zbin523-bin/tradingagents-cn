@@ -1,0 +1,42 @@
+services:
+  # Streamlit Web Service
+  - type: web
+    name: tradingagents-cn
+    env: python
+    plan: starter
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python start_render.py"
+    healthCheckPath: /_stcore/health
+    autoDeploy: true
+
+    # Environment variables (will be set via Render dashboard or API)
+    envVars:
+      - key: PORT
+        value: 8501
+      - key: PYTHON_VERSION
+        value: 3.11.13
+      - key: PYTHONUNBUFFERED
+        value: 1
+
+    # Build and runtime settings
+    buildFilter:
+      paths:
+        - "!synology-deploy/**"
+        - "!data/**"
+        - "!logs/**"
+        - "!cache/**"
+        - "!tests/**"
+        - "!docs/**"
+        - "!scripts/**"
+        - "!upstream_contribution/**"
+        - "!data_backup_*/**"
+        - "!.git/**"
+        - "!node_modules/**"
+
+  # Redis Service (optional, for session management and caching)
+  - type: redis
+    name: tradingagents-redis
+    plan: free
+    ipAllowList: []  # Only allow internal connections
+
+version: "1"

@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  tradingagents-cn:
+    build:
+      context: .
+      dockerfile: Dockerfile.synology
+    container_name: tradingagents-cn
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      # 在这里添加你的环境变量
+      - TAVILY_API_KEY=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
+      - DEEPSEEK_API_KEY=sk-43e5588b2aa547c9b977b374b45ddd37
+      - SILICONFLOW_API_KEY=sk-goeenxldkpvuywhlgkwdqpzwzgodenvmpxprwluvgolrbzul
+      - ALPHAVANTAGE_API_KEY=5DGMRPMMEUBMX7PU
+      - TUSHARE_API_KEY=91cb00a3a0021ce5faa4244f491a6669b926b3d50b381b1680bace81
+      - FINNHUB_API_KEY=d372ms9r01qtvbtjrefgd372ms9r01qtvbtjreg0
+      - POLYGON_API_KEY=hb0TuTgFLB603Xtyg_ephpjMpVc8W18L
+    volumes:
+      # 挂载数据目录
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./cache:/app/cache
+      # 挂载配置文件
+      - ./.env:/app/.env:ro
+    networks:
+      - tradingagents-network
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  tradingagents-network:
+    driver: bridge
+
+volumes:
+  tradingagents-data:
+    driver: local
+  tradingagents-logs:
+    driver: local
+  tradingagents-cache:
+    driver: local
