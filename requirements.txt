@@ -19,3 +19,6 @@ setuptools>=80.9.0
 # 网页抓取依赖
 beautifulsoup4>=4.9.0
 lxml>=4.6.0
+
+# AI 模型依赖
+openai>=1.0.0,<2.0.0
