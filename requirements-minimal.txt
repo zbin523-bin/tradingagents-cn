@@ -40,3 +40,6 @@ pypandoc>=1.11
 rich>=14.0.0
 questionary>=2.1.0
 setuptools>=80.9.0
+
+# 缺失的依赖
+pymongo>=4.0.0
