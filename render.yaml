@@ -23,6 +23,8 @@ services:
         value: d372ms9r01qtvbtjrefgd372ms9r01qtvbtjreg0
       - key: DEEPSEEK_API_KEY
         value: sk-43e5588b2aa547c9b977b374b45ddd37
+      - key: GOOGLE_API_KEY
+        value: your_google_api_key_here
 
       # Configuration
       - key: DEFAULT_CHINA_DATA_SOURCE
