@@ -1,8 +1,26 @@
-import chromadb
-from chromadb.config import Settings
-from openai import OpenAI
-import dashscope
-from dashscope import TextEmbedding
+# 按需导入，避免硬依赖
+def _get_chromadb():
+    try:
+        import chromadb
+        from chromadb.config import Settings
+        return chromadb, Settings
+    except ImportError:
+        return None, None
+
+def _get_openai():
+    try:
+        from openai import OpenAI
+        return OpenAI
+    except ImportError:
+        return None
+
+def _get_dashscope():
+    try:
+        import dashscope
+        from dashscope import TextEmbedding
+        return dashscope, TextEmbedding
+    except ImportError:
+        return None, None
 import os
 import threading
 import hashlib

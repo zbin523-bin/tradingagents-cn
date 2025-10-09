@@ -34,6 +34,22 @@ services:
       - key: MEMORY_ENABLED
         value: false
 
+      # Critical fallback configurations
+      - key: TUSHARE_TOKEN
+        value: ""
+      - key: SILICONFLOW_API_KEY
+        value: ""
+      - key: OPENAI_API_KEY
+        value: ""
+      - key: ANTHROPIC_API_KEY
+        value: ""
+
+      # System settings
+      - key: ENABLE_COST_TRACKING
+        value: true
+      - key: TRADINGAGENTS_LOG_LEVEL
+        value: INFO
+
     # Build and runtime settings
     buildFilter:
       paths:
