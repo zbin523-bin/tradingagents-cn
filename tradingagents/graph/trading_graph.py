@@ -7,9 +7,24 @@ from datetime import date
 from typing import Dict, Any, Tuple, List, Optional
 
 from langchain_openai import ChatOpenAI
-from langchain_anthropic import ChatAnthropic
-from langchain_google_genai import ChatGoogleGenerativeAI
 from tradingagents.llm_adapters import ChatDashScope, ChatDashScopeOpenAI, ChatGoogleOpenAI
+
+# 按需导入AI模型库，避免硬依赖
+def _get_anthropic_llm():
+    try:
+        from langchain_anthropic import ChatAnthropic
+        return ChatAnthropic
+    except ImportError:
+        logger.warning("⚠️ langchain_anthropic 未安装，Anthropic模型不可用")
+        return None
+
+def _get_google_llm():
+    try:
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        return ChatGoogleGenerativeAI
+    except ImportError:
+        logger.warning("⚠️ langchain-google-genai 未安装，Google模型不可用")
+        return None
 
 from langgraph.prebuilt import ToolNode
 
@@ -113,6 +128,9 @@ class TradingAgentsGraph:
             self.deep_thinking_llm = ChatOpenAI(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
             self.quick_thinking_llm = ChatOpenAI(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
         elif self.config["llm_provider"].lower() == "anthropic":
+            ChatAnthropic = _get_anthropic_llm()
+            if ChatAnthropic is None:
+                raise ImportError("Anthropic模型不可用：请安装 langchain-anthropic 包")
             self.deep_thinking_llm = ChatAnthropic(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
             self.quick_thinking_llm = ChatAnthropic(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
         elif self.config["llm_provider"].lower() == "google":
