@@ -22,6 +22,7 @@ lxml>=4.6.0
 
 # AI 模型依赖
 openai>=1.0.0,<2.0.0
+langchain-openai>=0.1.0
 
 # 金融数据依赖
 yfinance>=0.2.63
