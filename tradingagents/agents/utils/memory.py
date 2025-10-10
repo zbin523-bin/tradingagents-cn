@@ -69,6 +69,10 @@ class ChromaDBManager:
                         logger.info(f"📚 [ChromaDB] Windows 10兼容配置初始化完成")
                 else:
                     # 非Windows系统，使用标准配置
+                    chromadb, Settings = _get_chromadb()
+                    if chromadb is None:
+                        raise ImportError("ChromaDB not available")
+
                     settings = Settings(
                         allow_reset=True,
                         anonymized_telemetry=False,
@@ -82,6 +86,10 @@ class ChromaDBManager:
                 logger.error(f"❌ [ChromaDB] 初始化失败: {e}")
                 # 使用最简单的配置作为备用
                 try:
+                    chromadb, Settings = _get_chromadb()
+                    if chromadb is None:
+                        raise ImportError("ChromaDB not available")
+
                     settings = Settings(
                         allow_reset=True,
                         anonymized_telemetry=False,  # 关键：禁用遥测
@@ -91,13 +99,23 @@ class ChromaDBManager:
                     logger.info(f"📚 [ChromaDB] 使用备用配置初始化完成")
                 except Exception as backup_error:
                     # 最后的备用方案
-                    self._client = chromadb.Client()
-                    logger.warning(f"⚠️ [ChromaDB] 使用最简配置初始化: {backup_error}")
+                    chromadb, _ = _get_chromadb()
+                    if chromadb is not None:
+                        self._client = chromadb.Client()
+                        logger.warning(f"⚠️ [ChromaDB] 使用最简配置初始化: {backup_error}")
+                    else:
+                        logger.error(f"❌ [ChromaDB] 不可用，跳过初始化: {backup_error}")
+                        self._client = None
                 self._initialized = True
 
     def get_or_create_collection(self, name: str):
         """线程安全地获取或创建集合"""
         with self._lock:
+            # 检查ChromaDB是否可用
+            if self._client is None:
+                logger.warning(f"⚠️ [ChromaDB] 不可用，跳过集合操作: {name}")
+                return None
+
             if name in self._collections:
                 logger.info(f"📚 [ChromaDB] 使用缓存集合: {name}")
                 return self._collections[name]
