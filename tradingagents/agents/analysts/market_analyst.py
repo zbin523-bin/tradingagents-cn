@@ -26,7 +26,23 @@ def _get_agent_components():
                 )
             return create_react_agent_compatible, AgentExecutor
 
-from langchain import hub
+# 适配不同版本的LangChain hub导入
+def _get_hub():
+    try:
+        # 尝试新版本的导入方式 (LangChain 0.3.x)
+        from langchain import hub
+        return hub
+    except ImportError:
+        try:
+            # 尝试旧版本的导入方式
+            from langchain.hub import pull as hub_pull
+            return type('Hub', (), {'pull': hub_pull})()
+        except ImportError:
+            # 如果都不可用，返回空的hub对象
+            logger.warning("⚠️ LangChain hub模块不可用，将使用默认提示")
+            return type('Hub', (), {'pull': lambda x: None})()
+
+hub = _get_hub()
 import time
 import json
 import traceback
@@ -255,7 +271,34 @@ def create_market_analyst_react(llm, toolkit):
 
             try:
                 # 创建ReAct Agent
-                prompt = hub.pull("hwchase17/react")
+                try:
+                    prompt = hub.pull("hwchase17/react")
+                except Exception as e:
+                    logger.warning(f"⚠️ 无法从LangChain Hub加载提示模板: {e}")
+                    # 使用默认的ReAct提示模板
+                    from langchain_core.prompts import PromptTemplate
+                    prompt = PromptTemplate.from_template(
+                        """You are a helpful assistant. Answer the following questions as best you can.
+
+You have access to the following tools:
+{tools}
+
+Use the following format:
+
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action: the action to take, should be one of [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Thought: I now know the final answer
+Final Answer: the final answer to the original input question
+
+Begin!
+
+Question: {input}
+Thought:{agent_scratchpad}"""
+                    )
                 create_react_agent_func, AgentExecutor = _get_agent_components()
                 agent = create_react_agent_func(llm, tools, prompt)
                 agent_executor = AgentExecutor(
