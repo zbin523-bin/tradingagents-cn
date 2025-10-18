@@ -4,8 +4,8 @@ services:
     name: tradingagents-cn
     env: python
     plan: starter
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python start_render_fixed.py"
+    buildCommand: "pip install streamlit pandas plotly requests python-dotenv"
+    startCommand: "python emergency_start.py"
     healthCheckPath: /_stcore/health
     autoDeploy: true
 
