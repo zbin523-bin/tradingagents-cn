@@ -39,7 +39,7 @@ def _get_hub():
             return type('Hub', (), {'pull': hub_pull})()
         except ImportError:
             # 如果都不可用，返回空的hub对象
-            logger.warning("⚠️ LangChain hub模块不可用，将使用默认提示")
+            print("⚠️ LangChain hub模块不可用，将使用默认提示")
             return type('Hub', (), {'pull': lambda x: None})()
 
 hub = _get_hub()
