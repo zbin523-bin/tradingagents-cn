@@ -1,5 +1,31 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.agents import create_react_agent, AgentExecutor
+# 按需导入，适配不同版本的LangChain
+def _get_agent_components():
+    try:
+        # 尝试新版本的导入方式
+        from langchain.agents.react_agent import create_react_agent
+        from langchain.agents import AgentExecutor
+        return create_react_agent, AgentExecutor
+    except ImportError:
+        try:
+            # 尝试旧版本的导入方式
+            from langchain.agents import create_react_agent, AgentExecutor
+            return create_react_agent, AgentExecutor
+        except ImportError:
+            # 如果都不可用，尝试兼容模式
+            from langchain.agents import AgentExecutor
+            from langchain.agents.agent import AgentExecutor
+            def create_react_agent_compatible(llm, tools, prompt):
+                # 兼容的agent创建函数
+                from langchain.agents import initialize_agent, AgentType
+                return initialize_agent(
+                    tools,
+                    llm,
+                    agent=AgentType.REACT_DOCSTORE,
+                    prompt=prompt
+                )
+            return create_react_agent_compatible, AgentExecutor
+
 from langchain import hub
 import time
 import json
@@ -230,7 +256,8 @@ def create_market_analyst_react(llm, toolkit):
             try:
                 # 创建ReAct Agent
                 prompt = hub.pull("hwchase17/react")
-                agent = create_react_agent(llm, tools, prompt)
+                create_react_agent_func, AgentExecutor = _get_agent_components()
+                agent = create_react_agent_func(llm, tools, prompt)
                 agent_executor = AgentExecutor(
                     agent=agent,
                     tools=tools,
