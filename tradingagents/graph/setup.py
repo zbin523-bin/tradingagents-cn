@@ -5,7 +5,23 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import END, StateGraph, START
 from langgraph.prebuilt import ToolNode
 
-from tradingagents.agents import *
+# 导入具体的组件，避免通配符导入
+from tradingagents.agents import (
+    FinancialSituationMemory,
+    create_msg_delete,
+    create_bear_researcher,
+    create_bull_researcher,
+    create_research_manager,
+    create_fundamentals_analyst,
+    create_market_analyst,
+    create_neutral_debator,
+    create_news_analyst,
+    create_risky_debator,
+    create_risk_manager,
+    create_safe_debator,
+    create_social_media_analyst,
+    create_trader,
+)
 from tradingagents.agents.utils.agent_states import AgentState
 from tradingagents.agents.utils.agent_utils import Toolkit
 

@@ -158,9 +158,22 @@ class RealtimeNewsAggregator:
                 'to': end_time.strftime('%Y-%m-%d'),
                 'token': self.finnhub_key
             }
-            
-            response = requests.get(url, params=params, headers=self.headers)
-            response.raise_for_status()
+
+            try:
+                response = requests.get(url, params=params, headers=self.headers, timeout=30)
+                response.raise_for_status()
+            except requests.exceptions.Timeout:
+                logger.error(f"[FinnHub] 请求超时: {ticker}")
+                return []
+            except requests.exceptions.ConnectionError:
+                logger.error(f"[FinnHub] 网络连接错误: {ticker}")
+                return []
+            except requests.exceptions.HTTPError as e:
+                logger.error(f"[FinnHub] HTTP错误 {e.response.status_code}: {ticker}")
+                return []
+            except Exception as e:
+                logger.error(f"[FinnHub] 未知错误: {ticker}, 错误: {str(e)}")
+                return []
             
             news_data = response.json()
             news_items = []
@@ -203,9 +216,22 @@ class RealtimeNewsAggregator:
                 'apikey': self.alpha_vantage_key,
                 'limit': 50
             }
-            
-            response = requests.get(url, params=params, headers=self.headers)
-            response.raise_for_status()
+
+            try:
+                response = requests.get(url, params=params, headers=self.headers, timeout=30)
+                response.raise_for_status()
+            except requests.exceptions.Timeout:
+                logger.error(f"[Alpha Vantage] 请求超时: {ticker}")
+                return []
+            except requests.exceptions.ConnectionError:
+                logger.error(f"[Alpha Vantage] 网络连接错误: {ticker}")
+                return []
+            except requests.exceptions.HTTPError as e:
+                logger.error(f"[Alpha Vantage] HTTP错误 {e.response.status_code}: {ticker}")
+                return []
+            except Exception as e:
+                logger.error(f"[Alpha Vantage] 未知错误: {ticker}, 错误: {str(e)}")
+                return []
             
             data = response.json()
             news_items = []
@@ -264,8 +290,21 @@ class RealtimeNewsAggregator:
                 'apiKey': self.newsapi_key
             }
             
-            response = requests.get(url, params=params, headers=self.headers)
-            response.raise_for_status()
+            try:
+                response = requests.get(url, params=params, headers=self.headers, timeout=30)
+                response.raise_for_status()
+            except requests.exceptions.Timeout:
+                logger.error(f"[NewsAPI] 请求超时: {ticker}")
+                return []
+            except requests.exceptions.ConnectionError:
+                logger.error(f"[NewsAPI] 网络连接错误: {ticker}")
+                return []
+            except requests.exceptions.HTTPError as e:
+                logger.error(f"[NewsAPI] HTTP错误 {e.response.status_code}: {ticker}")
+                return []
+            except Exception as e:
+                logger.error(f"[NewsAPI] 未知错误: {ticker}, 错误: {str(e)}")
+                return []
             
             data = response.json()
             news_items = []
